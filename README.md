@@ -7,8 +7,14 @@ A lightweight toolbox for workflow and calculations in introductory engineering 
 The package allows users to integrate Python into common workflows for lectures and training assignments.
 
 `tekpy` is built using the powerful `sympy` library and standard Python tools. It is a "work in progress," with more functionality planned over time.
-## How to download
-The package is available via the GitHub repository: `pip install git+https://github.com/A-Kofod/tekpy.git`.
+## How to Install
+You can install `tekpy` directly from GitHub using pip:
+
+```bash
+pip install git+https://github.com/A-Kofod/tekpy.git
+```
+Source code is available at the GitHub repository: https://github.com/A-Kofod/tekpy.git
+
 ## Scope
 `tekpy` is designed specifically for students in marine engineering and technology management.
 

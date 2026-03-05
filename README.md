@@ -24,7 +24,7 @@ It is **not** a replacement for professional CAS software but provides a practic
 ### Complex Numbers in Polar Form
 Available via:  `from tekpy import polar_rek, polar_deg, rek_polar`.
 
-`polar_rek(magnitude, angle_degrees)`: returns a `sympy` complex number as `real + imaginary * I`. Supports arithmetic operations. 
+`polar_rek(magnitude, angle_degrees)`: returns a complex number object as `real + imaginary * I`. Supports arithmetic operations. 
 
 `polar_deg(Z)`: Returns a complex number object (like a `polar_rek` object) as a complex number in polar form. Specifically: `magnitude \angle degrees`. Readable output only. Meant for display. 
 
@@ -72,7 +72,7 @@ I = \frac{U}{Z} = \frac{400\angle30}{34\angle-28} = 11.76\angle58
 ```
 Here, `polar_rek` serves as the complex number generator, while `polar_deg` displays the number in polar form.
 
-`TexTree` rounds to two (2) decimals by default, but it is possible to round to `n` decimals using the `.round(n)` command.
+`TexTree` rounds to two (2) decimals by default, but it is possible to round to `n` decimals using the `.round(n)` method.
 
 Besides what's already covered, the class handles `dot` notation for variables, e.g., `dotV` -> `\dot{V}` -> $\dot{V}$, and selected SI units, e.g., `TexTree(f'2300W')` -> `2300\,\mathrm{W}` -> $2300\,\mathrm{W}$.
 

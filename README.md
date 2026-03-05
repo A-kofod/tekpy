@@ -52,7 +52,7 @@ Output:
 ```latex
 c = a + b = 12 + 4 = \underline{\underline{16}}
 ```
-The class supports functions such as: `sqrt, cos, sin` and notation elements like `^{exp}, _{index}`. 
+The class supports functions such as: `sqrt, cos, sin` and notation elements like `**, _` for exp. and index. 
 #### Example 2:
 Integration with `tekpy` complex number objects:
 

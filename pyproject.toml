@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tekpy"
+version = "0.0.1"
+
+dependencies = [
+    "sympy",  
+]
+
+requires-python = ">=3.10"
+
+authors = [
+    {name = "A-Kofod"}
+]
+
+description = "Light weight toolbox for marine engineering and tech management students."
+
+readme = "README.md"
+
+license = { text = "MIT" }
+
+keywords = ["AC", "circuit", "engineering", "latex", "maskinmester"]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering"
+
+]
+
+[project.urls]
+Contact = "https://www.linkedin.com/in/asbj%C3%B8rn-thorndal-kofod-3b2477392"
+

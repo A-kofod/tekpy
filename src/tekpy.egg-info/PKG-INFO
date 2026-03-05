@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: tekpy
+Version: 0.0.1
+Summary: Taylor made tools for marine engineering and tech management students.
+Author: A-Kofod
+License: MIT
+Project-URL: Contact, https://www.linkedin.com/in/asbj%C3%B8rn-thorndal-kofod-3b2477392
+Keywords: AC,circuit,engineering,latex,maskinmester
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Education
+Classifier: Programming Language :: Python :: 3
+Classifier: Topic :: Scientific/Engineering
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE.txt
+Requires-Dist: sympy
+Dynamic: license-file

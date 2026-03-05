@@ -8,7 +8,7 @@ The package allows users to integrate Python into common workflows for lectures 
 
 `tekpy` is built using the powerful `sympy` library and standard Python tools. It is a "work in progress," with more functionality planned over time.
 ## How to download
-The package is available via `pip install tekpy`, or via the GitHub repository.
+The package is available via the GitHub repository: `pip install git+https://github.com/A-Kofod/tekpy.git`.
 ## Scope
 `tekpy` is designed specifically for students in marine engineering and technology management.
 

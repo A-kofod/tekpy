@@ -52,8 +52,23 @@ Output:
 ```latex
 c = a + b = 12 + 4 = \underline{\underline{16}}
 ```
+
 The class supports functions such as: `sqrt, cos, sin` and notation elements like `**, _` for exp. and index. 
 #### Example 2:
+Parenthesies and notation elements.
+```python
+p_1 = 1.013e5
+T_1 = (25+273)
+T_2 = (45+273)
+k = 1.4
+p_2 = p_1 * (T_2 / T_1)**(k/(k-1))
+print(TexTree(f'p_2 = p_1 * (T_2 / T_1)**(k/(k-1)) = {p_1} * ({T_2} / {T_1})**({k}/({k-1}))'))
+```
+Output:
+```latex
+p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}}   
+```
+#### Example 3:
 Integration with `tekpy` complex number objects:
 
 ```python

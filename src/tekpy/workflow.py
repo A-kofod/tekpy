@@ -32,9 +32,6 @@ class TexTree:
     'math.tan': (4, 'R'),
     'u-': (4, 'R'),
     'ln':(4, 'R'),
-    #'angle': (4, 'R')
-    
-    
     
     }
     
@@ -51,19 +48,15 @@ class TexTree:
 
         token_patters = r'''
             \d+(?:\.\d+)?(?:e[+-]?\d+)?[A-Za-zµμΩ/^0-9]* | # numbers with optional e-notation + units
-          #  \d+(?:\.\d+)?e-?0?\d                  | # e-notation
-          #  \d+(?:\.\d+)?[A-Za-zµμΩ](?:[A-Za-zµμΩ^0-9/])*            | # unit handle
-          #  \d+(?:\.\d+)?\\angle-?\d+(?:\.\d+)? | # AC-notation
-            \d+\.\d+                            | # floats
-            \d+                                 | # ints
-            \*\*                                | # exp
-            [A-Za-z_]\w*                        | # letters/variabbles
-            [+\-*/=()]                            # ops
+            \d+\.\d+                                     | # floats
+            \d+                                          | # ints
+            \*\*                                         | # exp
+            [A-Za-z_]\w*                                 | # letters/variabbles
+            [+\-*/=()]                                     # ops
             
         '''
-        # Token handle for combined numbers
+        # Token handle for number representation
         
-
         tokens = re.findall(token_patters, expr, re.VERBOSE)
         print(f'tokens before handle = {tokens}')
         for i, token in enumerate(tokens):
@@ -151,8 +144,7 @@ class TexTree:
         while operator_stack:
             output_stack.append(operator_stack.pop())
             previus_token[0] = token
-        #output_stack.remove('(')
-        #output_stack.remove(')')
+
         
         print(f'output stack from infix to postfix = {output_stack}')
         return output_stack
@@ -176,6 +168,7 @@ class TexTree:
         # print(f'from tree_builder, buffer stack: {buffer_stack}')        
         return buffer_stack[0]
 
+    # Descriptive unit handle - should be improved in the future
     def render_leaf(self, token):
         SI_units = {"m", "s", "kg", "N", "Pa", "J", "W", "A", "V", "C", "F", "H", 'W', 'V', 'Omega', 
 }
@@ -202,8 +195,6 @@ class TexTree:
         if isinstance(tree, str):
             return self.render_leaf(tree)
 
-
-
         if len(tree) == 2:
             node, right = tree
             # Unary
@@ -224,9 +215,6 @@ class TexTree:
             
             if node in ('ln'):
                 return(f'\\ln\\left({{{(self.tex_render(right))}}}\\right)')
-            
-            
-            
                 
             # fallback
             return f'{node}({self.tex_render((right))})'
@@ -266,10 +254,9 @@ class TexTree:
             # Fallback
             return f'{left_leaf}, {node}, {right_leaf}'
             
-        
-        
-    def science_units (self, latex_tree:str) -> str:
-        """scientific units for added smartness:"""
+          
+    def pre_fix (self, latex_tree:str) -> str:
+        """pre_fix for number presentation"""
         prefix_map = {
             -3: '\\m', # milli
             -6: '\\mu', # micro
@@ -285,7 +272,7 @@ class TexTree:
         
         return re.sub(r'(\d+(?:\.\d+)?)e(-?\d+)', swap, latex_tree)
 
-          
+    # find and sub for Greek letters          
     def greek_letters (self, latex_tree:str) -> str:
         """Greek letters for rendereing in latex"""
         symbol_map = {
@@ -306,7 +293,6 @@ class TexTree:
             'rho': '\\rho',
             'Delta': '\\Delta',
             'pi': '\\pi',
-            #'angle': '\\angle'
         }
 
         pattern = r'[a-zA-Z]+'
@@ -323,7 +309,7 @@ class TexTree:
         return re.sub(pattern, r'\1_{\2}', latex_tree)
     
     def e_notation(self, latex_tree):
-        pattern = r'(\d+(?:\.\d+)?)[eE]([+-]?\d+)' # pattern = r'((\d+(?:\.\d+)?)(e)((+?-?0?\d+)))'
+        pattern = r'(\d+(?:\.\d+)?)[eE]([+-]?\d+)' 
 
         return re.sub(
             pattern, lambda m: f'{m.group(1)}\\cdot 10^{{{int(m.group(2))}}}', latex_tree
@@ -338,13 +324,14 @@ class TexTree:
         postfix = self.infix_to_postfix(tokens)
         tree = self.tree_builder(postfix)
         latex = self.tex_render(tree)
-        #latex = self.science_units(latex)
+        #latex = self.pre_fix(latex)
         latex = self.greek_letters(latex)
         latex = self.index_handle(latex)
         latex = self.e_notation(latex)
         latex = self.dot_adder(latex)
         return latex        
     
+    # Round entire expression before presentation 
     def _apply_round(self, latex, decimals):
         pattern = r'-?\d+(?:\.\d+)?(?:e[+-]?\d+)?'
         self.round_decimals = decimals
@@ -363,6 +350,7 @@ class TexTree:
 
         return re.sub(pattern, repl, latex)
 
+    # Decimals = 2 by defaault
     def round(self, decimals=2):
         self._round_decimals = decimals
         return self

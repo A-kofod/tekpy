@@ -5,9 +5,6 @@ class TexTree:
     def __init__(self, expr):
         self.expr = expr
 
-        # print(f'fist expr: {expr}')
-        
-
         self.precedence = {
     # Binary
     '+':(1, 'L'),
@@ -36,13 +33,37 @@ class TexTree:
     }
     
   
-        self._latex = self.all_call()
         self._round_decimals = 2
+        self.expr = self._apply_round(self.expr, self._round_decimals)
+        self._latex = self.all_call()
 
+    # Round entire expression before parsing 
+    def _apply_round(self, expr, decimals):
+        pattern = r'-?\d+(?:\.\d+)?(?:e[+-]?\d+)?'
+        self.round_decimals = decimals
+
+        def repl(match):
+            n = float(match.group(0))
+            if n == 0:
+                return '0'
+            
+            if abs(n) < 1e-3 or abs(n) >= 1e5:
+                   return format(n, f'.{decimals}g')
+            if abs(n) >= 1:
+                return f'{n:.{decimals}f}'.rstrip('0').rstrip('.')
+            else:
+                   return format(n, f'.{decimals}g') 
+
+        return re.sub(pattern, repl, expr)
+
+    # Decimals = 2 by defaault
+    def round(self, decimals=2):
+        self._round_decimals = decimals
+        return self
 
     def __str__(self):
-        return self._apply_round(self._latex, self._round_decimals)
-
+        return self._latex
+    
     def find_tokens(self, expr:str):
         tokens = []
 
@@ -55,10 +76,10 @@ class TexTree:
             [+\-*/=()]                                     # ops
             
         '''
+ 
         # Token handle for number representation
         
         tokens = re.findall(token_patters, expr, re.VERBOSE)
-        print(f'tokens before handle = {tokens}')
         for i, token in enumerate(tokens):
             if token == 'angle':
                 left = tokens[i - 1]
@@ -79,7 +100,7 @@ class TexTree:
 
                 print(f'token_repl = {token_repl}')
 
-        print(f'tokens post handle: {tokens}')
+        #print(f'tokens post handle: {tokens}')
         return tokens
 
     def infix_to_postfix(self, tokens):
@@ -146,7 +167,7 @@ class TexTree:
             previus_token[0] = token
 
         
-        print(f'output stack from infix to postfix = {output_stack}')
+        #print(f'output stack from infix to postfix = {output_stack}')
         return output_stack
 
 
@@ -155,7 +176,7 @@ class TexTree:
         buffer_stack = []
 
         for node in output_stack:
-            if node not in self.precedence and node not in self.unary: # if re.fullmatch(r'\d+(?:\.\d+)?', node):
+            if node not in self.precedence and node not in self.unary: 
                 buffer_stack.append(node) # operand or variable
                 
             elif node in self.unary:
@@ -168,7 +189,7 @@ class TexTree:
         # print(f'from tree_builder, buffer stack: {buffer_stack}')        
         return buffer_stack[0]
 
-    # Descriptive unit handle - should be improved in the future
+    # Descriptive SI unit handle - should be improved in the future
     def render_leaf(self, token):
         SI_units = {"m", "s", "kg", "N", "Pa", "J", "W", "A", "V", "C", "F", "H", 'W', 'V', 'Omega', 
 }
@@ -189,7 +210,8 @@ class TexTree:
                 return token
         
         return f'{val}\\,\\mathrm{{{unit}}}'
-                
+
+    # Walk the tree and render as latex            
     def tex_render(self, tree):
         # leaf
         if isinstance(tree, str):
@@ -303,13 +325,17 @@ class TexTree:
 
         return re.sub(pattern, repl, latex_tree)
 
-
+    # Handles subscripting for symbolic variables
     def index_handle(self, latex_tree):
         pattern = r'([a-zA-Z0-9,])_([a-zA-Z0-9øØæÆåÅ,]+)'
         return re.sub(pattern, r'\1_{\2}', latex_tree)
     
+    # Returns e notation as exponents of 10 for readability 
     def e_notation(self, latex_tree):
         pattern = r'(\d+(?:\.\d+)?)[eE]([+-]?\d+)' 
+
+        print('e_notation', re.sub(
+            pattern, lambda m: f'{m.group(1)}\\cdot 10^{{{int(m.group(2))}}}', latex_tree))
 
         return re.sub(
             pattern, lambda m: f'{m.group(1)}\\cdot 10^{{{int(m.group(2))}}}', latex_tree
@@ -318,7 +344,7 @@ class TexTree:
         return re.sub(r'(dot)([A-Za-z])', r'\\dot{\2}', latex_tree)
 
     
-
+    # call every method needed for parsing + features.
     def all_call(self):
         tokens = self.find_tokens(self.expr)
         postfix = self.infix_to_postfix(tokens)
@@ -331,29 +357,8 @@ class TexTree:
         latex = self.dot_adder(latex)
         return latex        
     
-    # Round entire expression before presentation 
-    def _apply_round(self, latex, decimals):
-        pattern = r'-?\d+(?:\.\d+)?(?:e[+-]?\d+)?'
-        self.round_decimals = decimals
 
-        def repl(match):
-            n = float(match.group(0))
-            if n == 0:
-                return '0'
-            
-            if abs(n) < 1e-3 or abs(n) >= 1e5:
-                   return format(n, f'.{decimals}g')
-            if abs(n) >= 1:
-                return f'{n:.{decimals}f}'.rstrip('0').rstrip('.')
-            else:
-                   return format(n, f'.{decimals}g') 
 
-        return re.sub(pattern, repl, latex)
-
-    # Decimals = 2 by defaault
-    def round(self, decimals=2):
-        self._round_decimals = decimals
-        return self
 
 
 

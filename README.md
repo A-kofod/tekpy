@@ -58,16 +58,19 @@ The class supports functions such as: `sqrt, cos, sin` and notation elements lik
 Parenthesies and notation elements.
 ```python
 p_1 = 1.013e5
-T_1 = (25+273)
-T_2 = (45+273)
+T_1 = 10+273.4589403
+T_2 = 45+273
 k = 1.4
-p_2 = p_1 * (T_2 / T_1)**(k/(k-1))
-print(TexTree(f'p_2 = p_1 * (T_2 / T_1)**(k/(k-1)) = {p_1} * ({T_2} / {T_1})**({k}/({k-1}))'))
+p_2 = p_1 * ((T_2 / T_1)**(k/(k-1)))
+
+t = TexTree(f'p_2 = p_1 * ((T_2 / T_1)**(k / (k-1))) = {p_1} * ({T_2} / {T_1})**({k} / ({k}-1)) res {p_2}Pa').e_nota(False)
+
 ```
 Output:
 ```latex
-p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}}   
+p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}} = 101300 \cdot \left(\frac{318}{283.46}\right)^{\frac{1.4}{1.4 - 1}} = \underline{\underline{151491.69\,\mathrm{Pa}}}   
 ```
+`e_nota(True, False)` allows the user to toggle between pure number or exponential notation. 
 #### Example 3:
 Integration with `tekpy` complex number objects:
 

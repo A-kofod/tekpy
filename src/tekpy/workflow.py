@@ -1,4 +1,4 @@
-import re
+import re, math
 
 class TexTree:
     """Python infix to LaTex math lines"""
@@ -34,36 +34,18 @@ class TexTree:
     
   
         self._round_decimals = 2
-        self.expr = self._apply_round(self.expr, self._round_decimals)
         self._latex = self.all_call()
-
-    # Round entire expression before parsing 
-    def _apply_round(self, expr, decimals):
-        pattern = r'-?\d+(?:\.\d+)?(?:e[+-]?\d+)?'
-        self.round_decimals = decimals
-
-        def repl(match):
-            n = float(match.group(0))
-            if n == 0:
-                return '0'
-            
-            if abs(n) < 1e-3 or abs(n) >= 1e5:
-                   return format(n, f'.{decimals}g')
-            if abs(n) >= 1:
-                return f'{n:.{decimals}f}'.rstrip('0').rstrip('.')
-            else:
-                   return format(n, f'.{decimals}g') 
-
-        return re.sub(pattern, repl, expr)
-
-    # Decimals = 2 by defaault
-    def round(self, decimals=2):
-        self._round_decimals = decimals
-        return self
+        self.e_notation_onoff = True
 
     def __str__(self):
-        return self._latex
-    
+        _to_show = self._apply_round(self._latex, self._round_decimals)
+        return self.e_notation(_to_show)
+
+    def e_nota(self, choice: bool):
+        """True or False"""
+        self.e_notation_onoff = choice
+        return self
+
     def find_tokens(self, expr:str):
         tokens = []
 
@@ -100,7 +82,7 @@ class TexTree:
 
                 print(f'token_repl = {token_repl}')
 
-        #print(f'tokens post handle: {tokens}')
+        print(f'tokens post handle: {tokens}')
         return tokens
 
     def infix_to_postfix(self, tokens):
@@ -332,10 +314,9 @@ class TexTree:
     
     # Returns e notation as exponents of 10 for readability 
     def e_notation(self, latex_tree):
+        if self.e_notation_onoff == False:
+            return latex_tree
         pattern = r'(\d+(?:\.\d+)?)[eE]([+-]?\d+)' 
-
-        print('e_notation', re.sub(
-            pattern, lambda m: f'{m.group(1)}\\cdot 10^{{{int(m.group(2))}}}', latex_tree))
 
         return re.sub(
             pattern, lambda m: f'{m.group(1)}\\cdot 10^{{{int(m.group(2))}}}', latex_tree
@@ -353,12 +334,61 @@ class TexTree:
         #latex = self.pre_fix(latex)
         latex = self.greek_letters(latex)
         latex = self.index_handle(latex)
-        latex = self.e_notation(latex)
+        #latex = self.e_notation(latex)
         latex = self.dot_adder(latex)
         return latex        
     
 
+    # Round entire expression before parsing 
+    def _apply_round(self, latex, decimals):
+        pattern = r'-?\d+(?:\.\d+)?(?:e[+-]?\d+)?'
+        self.round_decimals = decimals
+
+        def repl(match):
+            n = float(match.group(0))
+
+            if self.e_notation_onoff:
+
+                if n == 0:
+                    return '0'
+
+                if abs(n) < 1e-3:
+                    return format(n, f'.{decimals+1}g')
+                
+                if abs(n) >= 1e5:
+                    return format(n, f'.{decimals+1}g')
+                
+                else:
+                    return f'{n:.{decimals}f}'.rstrip('0').rstrip('.')
+            
+            if not self.e_notation_onoff:
+                if n == 0:
+                    return '0'
+                if abs(n) <= 1:
+                    exp = math.floor(math.log10(abs(n)))
+                    pres = max(decimals - exp - 1, 0)
+                    return f'{n:.{pres}f}'.rstrip('0').rstrip('.')
+                
+                else:
+                    return f'{n:.{decimals}f}'.rstrip('0').rstrip('.')
 
 
+        return re.sub(pattern, repl, latex)
 
+    # Decimals = 2 by defaault
+    def round(self, decimals=2):
+        """Decimals after decimal point"""
+        self._round_decimals = decimals
+        return self
+
+p_1 = 1.013e5
+T_1 = 10+273.4589403
+T_2 = 45+273
+k = 1.4
+p_2 = p_1 * ((T_2 / T_1)**(k/(k-1)))
+
+t = TexTree(f'p_2 = p_1 * ((T_2 / T_1)**(k / (k-1))) = {p_1} * ({T_2} / {T_1})**({k} / ({k}-1)) res {p_2}Pa').e_nota(False)
+
+
+print(t)
 

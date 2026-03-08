@@ -55,7 +55,7 @@ c = a + b = 12 + 4 = \underline{\underline{16}}
 
 The class supports functions such as: `sqrt, cos, sin` and notation elements like `**, _` for exp. and index. 
 #### Example 2:
-Parenthesies and notation elements.
+Parentheses and notation elements.
 ```python
 p_1 = 1.013e5
 T_1 = 10+273.4589403
@@ -70,7 +70,7 @@ Output:
 ```latex
 p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}} = 101300 \cdot \left(\frac{318}{283.46}\right)^{\frac{1.4}{1.4 - 1}} = \underline{\underline{151491.69\,\mathrm{Pa}}}   
 ```
-`e_nota(True, False)` allows the user to toggle between pure number or exponential notation. 
+`e_nota(False) # else True` allows the user to toggle between pure number or exponential notation. 
 #### Example 3:
 Integration with `tekpy` complex number objects:
 

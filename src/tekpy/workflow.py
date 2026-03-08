@@ -381,14 +381,3 @@ class TexTree:
         self._round_decimals = decimals
         return self
 
-p_1 = 1.013e5
-T_1 = 10+273.4589403
-T_2 = 45+273
-k = 1.4
-p_2 = p_1 * ((T_2 / T_1)**(k/(k-1)))
-
-t = TexTree(f'p_2 = p_1 * ((T_2 / T_1)**(k / (k-1))) = {p_1} * ({T_2} / {T_1})**({k} / ({k}-1)) res {p_2}Pa').e_nota(False)
-
-
-print(t)
-

@@ -381,4 +381,3 @@ class TexTree:
         self._round_decimals = decimals
         return self
 
-

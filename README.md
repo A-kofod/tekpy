@@ -63,12 +63,13 @@ T_2 = 45+273
 k = 1.4
 p_2 = p_1 * ((T_2 / T_1)**(k/(k-1)))
 
-t = TexTree(f'p_2 = p_1 * ((T_2 / T_1)**(k / (k-1))) = {p_1} * ({T_2} / {T_1})**({k} / ({k}-1))').round(7)
+t = TexTree(f'p_2 = p_1 * ((T_2 / T_1)**(k / (k-1))) = {p_1} * ({T_2} / {T_1})**({k} / ({k}-1)) res {p_2}Pa').e_nota(False)
+print(t)
 
 ```
 Output:
 ```latex
-p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}} = 101300 \cdot \left(\frac{318}{283}\right)^{\frac{1.4}{1.4 - 1}} = \underline{\underline{152353.29\,\mathrm{Pa}}}   
+p_{2} = p_{1} \cdot \left(\frac{T_{2}}{T_{1}}\right)^{\frac{k}{k - 1}} = 101300 \cdot \left(\frac{318}{283}\right)^{\frac{1.4}{1.4 - 1}} = \underline{\underline{152353.29\,\mathrm{Pa}}}
 ```
 `e_nota(False) # else True` allows the user to toggle between pure number or exponential notation. 
 #### Example 3:
